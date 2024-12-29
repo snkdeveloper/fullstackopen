@@ -42,7 +42,7 @@ const App = (props) => {
         )}
       </ul>
       <form onSubmit={addNote}>
-      <input value={newNote}  onChange={handlePersonChange}/>
+      {/* <input value={newNote}  onChange={handlePersonChange}/> */}
         <button type="submit">save</button>
       </form>   
       
