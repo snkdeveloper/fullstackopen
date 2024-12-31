@@ -2,12 +2,34 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import axios from 'axios'
 import personService from './services/persons'
+import'./App.css'
 const Filter =({sName,handlesNameChange}) =>
   (
     <div> filter shown with<input value = {sName} onChange={handlesNameChange}/></div>
   )
 
-
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+  
+    return (
+      <div className='error'>
+        {message}
+      </div>
+    )
+  }
+  const Notification2 = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+  
+    return (
+      <div className='happy'>
+        {message}
+      </div>
+    )
+  }
 const PersonForm =({addPerson,newName,handlePersonChange,newNumber,handleNumberChange})=>(
   <form onSubmit={addPerson}>
         <div>
@@ -40,6 +62,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber,setNewNumber] = useState('')
   const [sName, setsName] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [happyMessage, setHappyMessage] = useState(null)
 
   const hook = () =>{
     console.log('effect')
@@ -68,7 +92,25 @@ const App = () => {
       console.log(leperson)
       personService.update(leperson.id,personObject)
       .then(returnedPerson => {        setPersons(persons.map(person => person.id === leperson.id ? returnedPerson : person))      })
+      .catch(error =>{
+        setErrorMessage(     
+          `Information of ${newName} has already been removed from server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+
+
+        setPersons(persons.filter(n=>n.id!=leperson.id))
+      })
       }
+      setHappyMessage(     
+        `${newName}'s number has been changed`
+      )
+      setTimeout(() => {
+        setHappyMessage(null)
+      }, 5000)
+
       
       
 
@@ -78,6 +120,12 @@ const App = () => {
       .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
        setNewName('')  })
+       setHappyMessage(     
+        `Added ${personObject.name}`
+      )
+      setTimeout(() => {
+        setHappyMessage(null)
+      }, 5000)
 
      
 
@@ -109,6 +157,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
+      <Notification2 message={happyMessage} />
       <Filter sName={sName} handlesNameChange={handlesNameChange}/>
       
       <h3> Add a New</h3>
