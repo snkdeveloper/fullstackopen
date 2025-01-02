@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import axios from 'axios'
 
-const promise = axios.get('http://localhost:3001/notes')
+const promise = axios.get('http://localhost:3001/api/notes')
 console.log(promise)
 
 
